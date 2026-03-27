@@ -1,0 +1,11 @@
+{
+  "manifest_version": 3,
+  "appName": {
+    "message": "novaTab",
+    "description": "扩展名称"
+  },
+  "appDesc": {
+    "message": "一个美观的书签新标签页",
+    "description": "扩展描述"
+  }
+}

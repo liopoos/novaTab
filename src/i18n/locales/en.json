@@ -1,0 +1,118 @@
+{
+  "search": {
+    "placeholder": "Search bookmarks..."
+  },
+  "sidebar": {
+    "title": "novaTab",
+    "allBookmarks": "All Bookmarks",
+    "openSidebar": "Open sidebar",
+    "closeSidebar": "Close sidebar",
+    "chromeApps": "Chrome Apps",
+    "bookmarksBar": "Bookmarks Bar"
+  },
+  "folder": {
+    "empty": "This folder is empty",
+    "subfolders": "Folders"
+  },
+  "bookmarks": {
+    "empty": "No bookmarks found",
+    "title": "Bookmarks",
+    "results": "{{count}} results"
+  },
+  "breadcrumb": {
+    "home": "Home"
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System",
+    "toggle": "Toggle theme"
+  },
+  "preset": {
+    "default": "Default",
+    "rounded": "Rounded",
+    "sharp": "Sharp",
+    "rose": "Rose",
+    "blue": "Blue",
+    "green": "Green",
+    "orange": "Orange",
+    "custom": "Custom"
+  },
+  "language": {
+    "en": "English",
+    "zh": "中文",
+    "ja": "日本語",
+    "toggle": "Language"
+  },
+  "settings": {
+    "title": "Settings",
+    "openInNewTab": "Open links in new tab",
+    "rememberLastFolder": "Remember last opened folder",
+    "language": "Language",
+    "theme": "Theme",
+    "appearance": "Appearance",
+    "preset": "Preset",
+    "sidebarStyle": "Sidebar Style",
+    "save": "Save",
+    "close": "Close",
+    "data": "Data",
+    "export": "Export Settings",
+    "exportTooltip": "Download settings as a JSON file",
+    "import": "Import Settings",
+    "importTooltip": "Restore settings from a JSON file",
+    "importSuccess": "Settings imported successfully",
+    "importErrorParse": "Invalid file: could not parse JSON",
+    "importErrorInvalid": "Invalid file: not a novaTab settings file"
+  },
+  "about": {
+    "title": "About",
+    "subtitle": "Project information",
+    "logoAlt": "{{name}} logo",
+    "version": "Version {{version}}",
+    "repo": "Git repository"
+  },
+  "customTheme": {
+    "title": "Custom Theme",
+    "primaryColor": "Primary Color",
+    "radius": "Border Radius",
+    "radius.sharp": "Sharp",
+    "radius.round": "Round",
+    "fontFamily": "Font Family",
+    "fontFamily.inter": "Inter",
+    "fontFamily.system": "System",
+    "fontFamily.mono": "Mono",
+    "fontFamily.serif": "Serif",
+    "customFontFamily": "Custom font",
+    "customFontPlaceholder": "e.g. PingFang SC, SF Pro Text",
+    "surfaceStyle": "Surface Style",
+    "surfaceStyle.elevated": "Elevated",
+    "surfaceStyle.bordered": "Bordered",
+    "apply": "Apply",
+    "reset": "Reset"
+  },
+  "sidebarStyle": {
+    "style1": "Default",
+    "style2": "Floating Sidebar",
+    "style3": "Floating Panel"
+  },
+  "pin": {
+    "pin": "Star folder",
+    "unpin": "Remove star",
+    "pinnedFolders": "Starred",
+    "clearAll": "Starred folders",
+    "clearAllButton": "Clear all stars",
+    "togglePin": "Toggle star for current folder"
+  },
+  "shortcuts": {
+    "title": "Keyboard Shortcuts",
+    "navigation": "Navigation",
+    "sidebar": "Sidebar",
+    "general": "General",
+    "focusSearch": "Focus search",
+    "goHome": "Go to root",
+    "expandAll": "Expand all folders",
+    "collapseAll": "Collapse all folders",
+    "showShortcuts": "Show shortcuts",
+    "togglePin": "Star / unstar current folder"
+  }
+}

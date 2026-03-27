@@ -1,0 +1,11 @@
+{
+  "manifest_version": 3,
+  "appName": {
+    "message": "novaTab",
+    "description": "Extension name"
+  },
+  "appDesc": {
+    "message": "A beautiful bookmark new tab page",
+    "description": "Extension description"
+  }
+}

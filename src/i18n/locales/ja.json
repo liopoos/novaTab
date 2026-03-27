@@ -1,0 +1,118 @@
+{
+  "search": {
+    "placeholder": "ブックマークを検索..."
+  },
+  "sidebar": {
+    "title": "novaTab",
+    "allBookmarks": "すべてのブックマーク",
+    "openSidebar": "サイドバーを開く",
+    "closeSidebar": "サイドバーを閉じる",
+    "chromeApps": "Chrome アプリ",
+    "bookmarksBar": "ブックマークバー"
+  },
+  "folder": {
+    "empty": "このフォルダは空です",
+    "subfolders": "フォルダ"
+  },
+  "bookmarks": {
+    "empty": "ブックマークが見つかりません",
+    "title": "ブックマーク",
+    "results": "{{count}} 件"
+  },
+  "breadcrumb": {
+    "home": "ホーム"
+  },
+  "theme": {
+    "light": "ライト",
+    "dark": "ダーク",
+    "system": "システム",
+    "toggle": "テーマ切替"
+  },
+  "preset": {
+    "default": "デフォルト",
+    "rounded": "ラウンド",
+    "sharp": "シャープ",
+    "rose": "ローズ",
+    "blue": "ブルー",
+    "green": "グリーン",
+    "orange": "オレンジ",
+    "custom": "カスタム"
+  },
+  "language": {
+    "en": "English",
+    "zh": "中文",
+    "ja": "日本語",
+    "toggle": "言語"
+  },
+  "settings": {
+    "title": "設定",
+    "openInNewTab": "リンクを新しいタブで開く",
+    "rememberLastFolder": "最後に開いたフォルダを記憶する",
+    "language": "言語",
+    "theme": "テーマ",
+    "appearance": "外観",
+    "preset": "プリセット",
+    "sidebarStyle": "サイドバースタイル",
+    "save": "保存",
+    "close": "閉じる",
+    "data": "データ",
+    "export": "設定をエクスポート",
+    "exportTooltip": "設定を JSON ファイルとしてダウンロード",
+    "import": "設定をインポート",
+    "importTooltip": "JSON ファイルから設定を復元",
+    "importSuccess": "設定を正常にインポートしました",
+    "importErrorParse": "無効なファイル：JSON を解析できませんでした",
+    "importErrorInvalid": "無効なファイル：novaTab の設定ファイルではありません"
+  },
+  "about": {
+    "title": "について",
+    "subtitle": "プロジェクト情報",
+    "logoAlt": "{{name}} のロゴ",
+    "version": "バージョン {{version}}",
+    "repo": "Git リポジトリ"
+  },
+  "customTheme": {
+    "title": "カスタムテーマ",
+    "primaryColor": "メインカラー",
+    "radius": "角の丸み",
+    "radius.sharp": "角張り",
+    "radius.round": "丸み",
+    "fontFamily": "フォント",
+    "fontFamily.inter": "Inter",
+    "fontFamily.system": "システム",
+    "fontFamily.mono": "等幅",
+    "fontFamily.serif": "セリフ",
+    "customFontFamily": "カスタムフォント",
+    "customFontPlaceholder": "例：Noto Sans JP、Hiragino Sans",
+    "surfaceStyle": "サーフェススタイル",
+    "surfaceStyle.elevated": "浮き上がり",
+    "surfaceStyle.bordered": "ボーダー",
+    "apply": "適用",
+    "reset": "リセット"
+  },
+  "sidebarStyle": {
+    "style1": "デフォルト",
+    "style2": "フローティングサイドバー",
+    "style3": "フローティングパネル"
+  },
+  "pin": {
+    "pin": "フォルダをスター",
+    "unpin": "スターを外す",
+    "pinnedFolders": "スター済み",
+    "clearAll": "スター付きフォルダ",
+    "clearAllButton": "すべてのスターを削除",
+    "togglePin": "現在のフォルダのスターを切り替え"
+  },
+  "shortcuts": {
+    "title": "キーボードショートカット",
+    "navigation": "ナビゲーション",
+    "sidebar": "サイドバー",
+    "general": "一般",
+    "focusSearch": "検索にフォーカス",
+    "goHome": "ルートへ移動",
+    "expandAll": "すべてのフォルダを展開",
+    "collapseAll": "すべてのフォルダを折り畳む",
+    "showShortcuts": "ショートカットを表示",
+    "togglePin": "現在のフォルダをスター／解除"
+  }
+}

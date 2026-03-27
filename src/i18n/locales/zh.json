@@ -1,0 +1,118 @@
+{
+  "search": {
+    "placeholder": "搜索书签..."
+  },
+  "sidebar": {
+    "title": "novaTab",
+    "allBookmarks": "所有书签",
+    "openSidebar": "展开侧边栏",
+    "closeSidebar": "收起侧边栏",
+    "chromeApps": "Chrome 应用",
+    "bookmarksBar": "书签栏"
+  },
+  "folder": {
+    "empty": "此文件夹为空",
+    "subfolders": "文件夹"
+  },
+  "bookmarks": {
+    "empty": "未找到书签",
+    "title": "书签",
+    "results": "{{count}} 个结果"
+  },
+  "breadcrumb": {
+    "home": "主页"
+  },
+  "theme": {
+    "light": "浅色",
+    "dark": "深色",
+    "system": "跟随系统",
+    "toggle": "切换主题"
+  },
+  "preset": {
+    "default": "默认",
+    "rounded": "圆润",
+    "sharp": "简洁",
+    "rose": "玫瑰",
+    "blue": "蓝色",
+    "green": "绿色",
+    "orange": "橙色",
+    "custom": "自定义"
+  },
+  "language": {
+    "en": "English",
+    "zh": "中文",
+    "ja": "日本語",
+    "toggle": "语言"
+  },
+  "settings": {
+    "title": "设置",
+    "openInNewTab": "在新标签页中打开链接",
+    "rememberLastFolder": "记住上次打开的文件夹",
+    "language": "语言",
+    "theme": "主题",
+    "appearance": "外观",
+    "preset": "预设",
+    "sidebarStyle": "侧边栏风格",
+    "save": "保存",
+    "close": "关闭",
+    "data": "数据",
+    "export": "导出设置",
+    "exportTooltip": "将设置下载为 JSON 文件",
+    "import": "导入设置",
+    "importTooltip": "从 JSON 文件恢复设置",
+    "importSuccess": "设置已成功导入",
+    "importErrorParse": "文件无效：无法解析 JSON",
+    "importErrorInvalid": "文件无效：不是 novaTab 设置文件"
+  },
+  "about": {
+    "title": "关于",
+    "subtitle": "项目信息",
+    "logoAlt": "{{name}} 标识",
+    "version": "版本 {{version}}",
+    "repo": "Git 仓库地址"
+  },
+  "customTheme": {
+    "title": "自定义主题",
+    "primaryColor": "主题色",
+    "radius": "圆角大小",
+    "radius.sharp": "直角",
+    "radius.round": "圆角",
+    "fontFamily": "字体",
+    "fontFamily.inter": "Inter",
+    "fontFamily.system": "系统",
+    "fontFamily.mono": "等宽",
+    "fontFamily.serif": "衬线",
+    "customFontFamily": "自定义字体",
+    "customFontPlaceholder": "例如：PingFang SC、Microsoft YaHei",
+    "surfaceStyle": "界面风格",
+    "surfaceStyle.elevated": "浮层",
+    "surfaceStyle.bordered": "描边",
+    "apply": "应用",
+    "reset": "重置"
+  },
+  "sidebarStyle": {
+    "style1": "默认",
+    "style2": "悬浮侧边栏",
+    "style3": "悬浮面板"
+  },
+  "pin": {
+    "pin": "星标文件夹",
+    "unpin": "移除星标",
+    "pinnedFolders": "已星标",
+    "clearAll": "星标文件夹",
+    "clearAllButton": "清除全部星标",
+    "togglePin": "切换当前文件夹星标"
+  },
+  "shortcuts": {
+    "title": "快捷键",
+    "navigation": "导航",
+    "sidebar": "侧边栏",
+    "general": "通用",
+    "focusSearch": "聚焦搜索栏",
+    "goHome": "返回顶层文件夹",
+    "expandAll": "展开所有文件夹",
+    "collapseAll": "收起所有文件夹",
+    "showShortcuts": "显示快捷键",
+    "togglePin": "星标 / 取消星标当前文件夹"
+  }
+}
