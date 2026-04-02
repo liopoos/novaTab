@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/tooltip";
 import { useTranslation } from "react-i18next";
 import { isChromeAvailable } from "@/lib/favicon";
+import { useSettingsContext } from "@/contexts/SettingsContext";
 
 function Kbd({ children }: { children: React.ReactNode }) {
   return (
@@ -49,6 +50,7 @@ export interface ShortcutsDialogHandle {
 export const ShortcutsDialog = forwardRef<ShortcutsDialogHandle, { onOpen?: () => void }>(
   function ShortcutsDialog({ onOpen }, ref) {
     const { t } = useTranslation();
+    const { settings } = useSettingsContext();
     const [open, setOpen] = useState(false);
 
     useImperativeHandle(ref, () => ({
@@ -68,9 +70,26 @@ export const ShortcutsDialog = forwardRef<ShortcutsDialogHandle, { onOpen?: () =
       { label: t("shortcuts.togglePin"), keys: ["P"] },
     ];
 
-    if (isChromeAvailable) {
+    const hasSessionsApi =
+      isChromeAvailable &&
+      !!chrome.sessions &&
+      typeof chrome.sessions.getRecentlyClosed === "function";
+
+    const hasTopSitesApi =
+      isChromeAvailable &&
+      !!chrome.topSites &&
+      typeof chrome.topSites.get === "function";
+
+    const recentlyClosedInserted = settings.showRecentlyClosed && hasSessionsApi;
+
+    if (recentlyClosedInserted) {
       navigationShortcuts.splice(2, 0,
-        { label: t("shortcuts.goRecentlyClosed"), keys: ["R"] },
+        { label: t("shortcuts.goRecentlyClosed"), keys: ["R"] }
+      );
+    }
+
+    if (settings.showMostVisited && hasTopSitesApi) {
+      navigationShortcuts.splice(recentlyClosedInserted ? 3 : 2, 0,
         { label: t("shortcuts.goMostVisited"), keys: ["M"] }
       );
     }
