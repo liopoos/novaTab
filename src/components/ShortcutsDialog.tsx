@@ -14,6 +14,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useTranslation } from "react-i18next";
+import { isChromeAvailable } from "@/lib/favicon";
 
 function Kbd({ children }: { children: React.ReactNode }) {
   return (
@@ -61,14 +62,23 @@ export const ShortcutsDialog = forwardRef<ShortcutsDialogHandle, { onOpen?: () =
       setOpen(next);
     };
 
+    const navigationShortcuts: ShortcutRowProps[] = [
+      { label: t("shortcuts.focusSearch"), keys: ["/"] },
+      { label: t("shortcuts.goHome"), keys: ["H"] },
+      { label: t("shortcuts.togglePin"), keys: ["P"] },
+    ];
+
+    if (isChromeAvailable) {
+      navigationShortcuts.splice(2, 0,
+        { label: t("shortcuts.goRecentlyClosed"), keys: ["R"] },
+        { label: t("shortcuts.goMostVisited"), keys: ["M"] }
+      );
+    }
+
     const groups: { heading: string; shortcuts: ShortcutRowProps[] }[] = [
       {
         heading: t("shortcuts.navigation"),
-        shortcuts: [
-          { label: t("shortcuts.focusSearch"), keys: ["/"] },
-          { label: t("shortcuts.goHome"), keys: ["H"] },
-          { label: t("shortcuts.togglePin"), keys: ["P"] },
-        ],
+        shortcuts: navigationShortcuts,
       },
       {
         heading: t("shortcuts.sidebar"),

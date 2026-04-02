@@ -4,11 +4,16 @@
   },
   "sidebar": {
     "title": "novaTab",
-    "allBookmarks": "所有书签",
+    "allBookmarks": "主页",
     "openSidebar": "展开侧边栏",
     "closeSidebar": "收起侧边栏",
     "chromeApps": "Chrome 应用",
-    "bookmarksBar": "书签栏"
+    "bookmarksBar": "书签栏",
+    "recentlyClosed": "最近关闭",
+    "mostVisited": "经常访问",
+    "closedWindow": "{{count}} 个标签页",
+    "noRecentlyClosed": "暂无最近关闭的标签页",
+    "noMostVisited": "暂无经常访问的网站"
   },
   "folder": {
     "empty": "此文件夹为空",
@@ -32,10 +37,11 @@
     "default": "默认",
     "rounded": "圆润",
     "sharp": "简洁",
-    "rose": "玫瑰",
     "blue": "蓝色",
-    "green": "绿色",
-    "orange": "橙色",
+    "claude": "Claude",
+    "contrast": "高对比",
+    "portfolio": "Portfolio",
+    "terminal": "终端",
     "custom": "自定义"
   },
   "language": {
@@ -48,6 +54,8 @@
     "title": "设置",
     "openInNewTab": "在新标签页中打开链接",
     "rememberLastFolder": "记住上次打开的文件夹",
+    "showRecentlyClosed": "显示最近关闭",
+    "showMostVisited": "显示经常访问",
     "language": "语言",
     "theme": "主题",
     "appearance": "外观",
@@ -110,6 +118,8 @@
     "general": "通用",
     "focusSearch": "聚焦搜索栏",
     "goHome": "返回顶层文件夹",
+    "goRecentlyClosed": "最近关闭",
+    "goMostVisited": "经常访问",
     "expandAll": "展开所有文件夹",
     "collapseAll": "收起所有文件夹",
     "showShortcuts": "显示快捷键",

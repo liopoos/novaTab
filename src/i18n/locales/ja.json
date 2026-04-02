@@ -4,11 +4,16 @@
   },
   "sidebar": {
     "title": "novaTab",
-    "allBookmarks": "すべてのブックマーク",
+    "allBookmarks": "ホーム",
     "openSidebar": "サイドバーを開く",
     "closeSidebar": "サイドバーを閉じる",
     "chromeApps": "Chrome アプリ",
-    "bookmarksBar": "ブックマークバー"
+    "bookmarksBar": "ブックマークバー",
+    "recentlyClosed": "最近閉じたタブ",
+    "mostVisited": "よく見るサイト",
+    "closedWindow": "{{count}} 個のタブ",
+    "noRecentlyClosed": "最近閉じたタブはありません",
+    "noMostVisited": "よく訪れるサイトはありません"
   },
   "folder": {
     "empty": "このフォルダは空です",
@@ -32,10 +37,11 @@
     "default": "デフォルト",
     "rounded": "ラウンド",
     "sharp": "シャープ",
-    "rose": "ローズ",
     "blue": "ブルー",
-    "green": "グリーン",
-    "orange": "オレンジ",
+    "claude": "Claude",
+    "contrast": "ハイコントラスト",
+    "portfolio": "Portfolio",
+    "terminal": "ターミナル",
     "custom": "カスタム"
   },
   "language": {
@@ -48,6 +54,8 @@
     "title": "設定",
     "openInNewTab": "リンクを新しいタブで開く",
     "rememberLastFolder": "最後に開いたフォルダを記憶する",
+    "showRecentlyClosed": "最近閉じたタブを表示",
+    "showMostVisited": "よく見るサイトを表示",
     "language": "言語",
     "theme": "テーマ",
     "appearance": "外観",
@@ -110,6 +118,8 @@
     "general": "一般",
     "focusSearch": "検索にフォーカス",
     "goHome": "ルートへ移動",
+    "goRecentlyClosed": "最近閉じたタブ",
+    "goMostVisited": "よく見るサイト",
     "expandAll": "すべてのフォルダを展開",
     "collapseAll": "すべてのフォルダを折り畳む",
     "showShortcuts": "ショートカットを表示",

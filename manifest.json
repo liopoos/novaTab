@@ -9,7 +9,7 @@
     "48": "src/assets/icons/icon-48.png",
     "128": "src/assets/icons/icon-128.png"
   },
-  "permissions": ["storage", "bookmarks", "favicon", "tabs", "sidePanel"],
+  "permissions": ["storage", "bookmarks", "favicon", "tabs", "sidePanel", "sessions", "topSites"],
   "action": {
     "default_icon": {
       "16": "src/assets/icons/icon-16.png",

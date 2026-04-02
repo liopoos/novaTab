@@ -4,15 +4,29 @@ import { DEFAULT_SETTINGS } from "@/types";
 
 const STORAGE_KEY = "nova-settings";
 
-function mergeSettings(stored: Partial<AppSettings>): AppSettings {
+function shouldForceDisableBrowserPages(): boolean {
+  return !isChromeStorageAvailable();
+}
+
+function enforceEnvironmentSettings(settings: AppSettings): AppSettings {
+  if (!shouldForceDisableBrowserPages()) return settings;
+
   return {
+    ...settings,
+    showRecentlyClosed: false,
+    showMostVisited: false,
+  };
+}
+
+function mergeSettings(stored: Partial<AppSettings>): AppSettings {
+  return enforceEnvironmentSettings({
     ...DEFAULT_SETTINGS,
     ...stored,
     customTheme: {
       ...DEFAULT_SETTINGS.customTheme,
       ...(stored.customTheme ?? {}),
     },
-  };
+  });
 }
 
 function isChromeStorageAvailable(): boolean {
@@ -28,7 +42,7 @@ async function readSettings(): Promise<AppSettings> {
     return new Promise((resolve) => {
       chrome.storage.sync.get(STORAGE_KEY, (result) => {
         const stored = result[STORAGE_KEY];
-        resolve(stored ? mergeSettings(stored) : DEFAULT_SETTINGS);
+        resolve(stored ? mergeSettings(stored) : enforceEnvironmentSettings(DEFAULT_SETTINGS));
       });
     });
   }
@@ -37,19 +51,21 @@ async function readSettings(): Promise<AppSettings> {
     try {
       return mergeSettings(JSON.parse(raw));
     } catch {
-      return DEFAULT_SETTINGS;
+      return enforceEnvironmentSettings(DEFAULT_SETTINGS);
     }
   }
-  return DEFAULT_SETTINGS;
+  return enforceEnvironmentSettings(DEFAULT_SETTINGS);
 }
 
 async function writeSettings(settings: AppSettings): Promise<void> {
+  const normalized = enforceEnvironmentSettings(settings);
+
   if (isChromeStorageAvailable()) {
     return new Promise((resolve) => {
-      chrome.storage.sync.set({ [STORAGE_KEY]: settings }, resolve);
+      chrome.storage.sync.set({ [STORAGE_KEY]: normalized }, resolve);
     });
   }
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized));
 }
 
 interface UseSettingsReturn {
@@ -59,16 +75,16 @@ interface UseSettingsReturn {
 }
 
 function readSettingsSync(): AppSettings {
-  if (isChromeStorageAvailable()) return DEFAULT_SETTINGS;
+  if (isChromeStorageAvailable()) return enforceEnvironmentSettings(DEFAULT_SETTINGS);
   const raw = localStorage.getItem(STORAGE_KEY);
   if (raw) {
     try {
       return mergeSettings(JSON.parse(raw));
     } catch {
-      return DEFAULT_SETTINGS;
+      return enforceEnvironmentSettings(DEFAULT_SETTINGS);
     }
   }
-  return DEFAULT_SETTINGS;
+  return enforceEnvironmentSettings(DEFAULT_SETTINGS);
 }
 
 export function useSettings(): UseSettingsReturn {
@@ -100,7 +116,7 @@ export function useSettings(): UseSettingsReturn {
 
   const updateSettings = useCallback(
     (partial: Partial<AppSettings>) => {
-      const next = { ...settings, ...partial };
+      const next = enforceEnvironmentSettings({ ...settings, ...partial });
       setSettings(next);
       writeSettings(next);
     },

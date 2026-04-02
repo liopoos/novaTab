@@ -4,11 +4,16 @@
   },
   "sidebar": {
     "title": "novaTab",
-    "allBookmarks": "All Bookmarks",
+    "allBookmarks": "Home",
     "openSidebar": "Open sidebar",
     "closeSidebar": "Close sidebar",
     "chromeApps": "Chrome Apps",
-    "bookmarksBar": "Bookmarks Bar"
+    "bookmarksBar": "Bookmarks Bar",
+    "recentlyClosed": "Recently Closed",
+    "mostVisited": "Most Visited",
+    "closedWindow": "{{count}} tabs",
+    "noRecentlyClosed": "No recently closed tabs",
+    "noMostVisited": "No frequently visited sites"
   },
   "folder": {
     "empty": "This folder is empty",
@@ -32,10 +37,11 @@
     "default": "Default",
     "rounded": "Rounded",
     "sharp": "Sharp",
-    "rose": "Rose",
     "blue": "Blue",
-    "green": "Green",
-    "orange": "Orange",
+    "claude": "Claude",
+    "contrast": "Contrast",
+    "portfolio": "Portfolio",
+    "terminal": "Terminal",
     "custom": "Custom"
   },
   "language": {
@@ -48,6 +54,8 @@
     "title": "Settings",
     "openInNewTab": "Open links in new tab",
     "rememberLastFolder": "Remember last opened folder",
+    "showRecentlyClosed": "Show Recently Closed",
+    "showMostVisited": "Show Most Visited",
     "language": "Language",
     "theme": "Theme",
     "appearance": "Appearance",
@@ -110,6 +118,8 @@
     "general": "General",
     "focusSearch": "Focus search",
     "goHome": "Go to root",
+    "goRecentlyClosed": "Recently Closed",
+    "goMostVisited": "Most Visited",
     "expandAll": "Expand all folders",
     "collapseAll": "Collapse all folders",
     "showShortcuts": "Show shortcuts",

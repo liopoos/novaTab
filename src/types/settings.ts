@@ -1,9 +1,10 @@
 export type ThemePreset =
   | "default"
-  | "rose"
   | "blue"
-  | "green"
-  | "orange"
+  | "claude"
+  | "contrast"
+  | "portfolio"
+  | "terminal"
   | "rounded"
   | "sharp"
   | "custom";
@@ -31,6 +32,8 @@ export type SidebarStyle = "style1" | "style2" | "style3";
 export interface AppSettings {
   openInNewTab: boolean;
   rememberLastFolder: boolean;
+  showRecentlyClosed: boolean;
+  showMostVisited: boolean;
   language: "en" | "zh" | "ja";
   theme: "light" | "dark" | "system";
   preset: ThemePreset;
@@ -41,6 +44,8 @@ export interface AppSettings {
 export const DEFAULT_SETTINGS: AppSettings = {
   openInNewTab: true,
   rememberLastFolder: false,
+  showRecentlyClosed: true,
+  showMostVisited: true,
   language: "en",
   theme: "light",
   preset: "default",
