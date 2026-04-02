@@ -9,11 +9,15 @@ import {
 import { useTranslation } from "react-i18next";
 import type { BreadcrumbItem as BreadcrumbItemType } from "@/types";
 
+type ActiveView = "bookmarks" | "recentlyClosed" | "mostVisited";
+
 interface BreadcrumbNavProps {
   breadcrumb: BreadcrumbItemType[];
   selectedFolderId: string | null;
   selectedFolderTitle?: string;
   onFolderSelect: (id: string | null) => void;
+  activeView?: ActiveView;
+  onGoHome?: () => void;
 }
 
 export function BreadcrumbNav({
@@ -21,8 +25,46 @@ export function BreadcrumbNav({
   selectedFolderId,
   selectedFolderTitle,
   onFolderSelect,
+  activeView = "bookmarks",
+  onGoHome,
 }: BreadcrumbNavProps) {
   const { t } = useTranslation();
+
+  if (activeView === "recentlyClosed") {
+    return (
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink onClick={onGoHome} className="cursor-pointer">
+              {t("breadcrumb.home")}
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>{t("sidebar.recentlyClosed")}</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+    );
+  }
+
+  if (activeView === "mostVisited") {
+    return (
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink onClick={onGoHome} className="cursor-pointer">
+              {t("breadcrumb.home")}
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>{t("sidebar.mostVisited")}</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+    );
+  }
 
   return (
     <Breadcrumb>

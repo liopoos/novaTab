@@ -1,4 +1,9 @@
 @import "tailwindcss";
+@import "./presets/blue.css";
+@import "./presets/claude.css";
+@import "./presets/contrast.css";
+@import "./presets/portfolio.css";
+@import "./presets/terminal.css";
 
 @custom-variant dark (&:where(.dark,.dark *));
 
@@ -80,6 +85,7 @@
 
 /* ── Theme presets (data-preset attribute on <html>) ── */
 /* "default" uses the base @theme tokens — no override block needed */
+/* Color presets are in src/styles/presets/ — one file per preset */
 
 /* Rounded — soft, friendly (zinc palette, larger radius) */
 [data-preset="rounded"] {
@@ -90,131 +96,6 @@
 [data-preset="sharp"] {
   --radius: 0.125rem;
 }
-
-/* Rose */
-[data-preset="rose"] {
-  --radius: 0.5rem;
-  --color-primary: oklch(0.508 0.207 14.04);
-  --color-primary-foreground: oklch(0.985 0.002 14.04);
-  --color-secondary: oklch(0.97 0.008 14.04);
-  --color-secondary-foreground: oklch(0.205 0.01 14.04);
-  --color-accent: oklch(0.97 0.008 14.04);
-  --color-accent-foreground: oklch(0.205 0.01 14.04);
-  --color-ring: oklch(0.508 0.207 14.04);
-  --color-sidebar-primary: oklch(0.508 0.207 14.04);
-  --color-sidebar-primary-foreground: oklch(0.985 0.002 14.04);
-  --color-sidebar-accent: oklch(0.97 0.008 14.04);
-  --color-sidebar-accent-foreground: oklch(0.205 0.01 14.04);
-  --color-sidebar-ring: oklch(0.508 0.207 14.04);
-}
-[data-preset="rose"].dark {
-  --color-primary: oklch(0.712 0.164 14.04);
-  --color-primary-foreground: oklch(0.145 0.01 14.04);
-  --color-secondary: oklch(0.269 0.015 14.04);
-  --color-secondary-foreground: oklch(0.985 0.002 14.04);
-  --color-accent: oklch(0.269 0.015 14.04);
-  --color-accent-foreground: oklch(0.985 0.002 14.04);
-  --color-ring: oklch(0.712 0.164 14.04);
-  --color-sidebar-primary: oklch(0.712 0.164 14.04);
-  --color-sidebar-primary-foreground: oklch(0.145 0.01 14.04);
-  --color-sidebar-accent: oklch(0.330 0.015 14.04);
-  --color-sidebar-accent-foreground: oklch(0.985 0.002 14.04);
-  --color-sidebar-ring: oklch(0.712 0.164 14.04);
-}
-
-/* Blue */
-[data-preset="blue"] {
-  --radius: 0.5rem;
-  --color-primary: oklch(0.488 0.243 264.376);
-  --color-primary-foreground: oklch(0.985 0.002 264.376);
-  --color-secondary: oklch(0.97 0.012 264.376);
-  --color-secondary-foreground: oklch(0.205 0.01 264.376);
-  --color-accent: oklch(0.97 0.012 264.376);
-  --color-accent-foreground: oklch(0.205 0.01 264.376);
-  --color-ring: oklch(0.488 0.243 264.376);
-  --color-sidebar-primary: oklch(0.488 0.243 264.376);
-  --color-sidebar-primary-foreground: oklch(0.985 0.002 264.376);
-  --color-sidebar-accent: oklch(0.97 0.012 264.376);
-  --color-sidebar-accent-foreground: oklch(0.205 0.01 264.376);
-  --color-sidebar-ring: oklch(0.488 0.243 264.376);
-}
-[data-preset="blue"].dark {
-  --color-primary: oklch(0.696 0.17 264.376);
-  --color-primary-foreground: oklch(0.145 0.01 264.376);
-  --color-secondary: oklch(0.269 0.02 264.376);
-  --color-secondary-foreground: oklch(0.985 0.002 264.376);
-  --color-accent: oklch(0.269 0.02 264.376);
-  --color-accent-foreground: oklch(0.985 0.002 264.376);
-  --color-ring: oklch(0.696 0.17 264.376);
-  --color-sidebar-primary: oklch(0.696 0.17 264.376);
-  --color-sidebar-primary-foreground: oklch(0.145 0.01 264.376);
-  --color-sidebar-accent: oklch(0.330 0.02 264.376);
-  --color-sidebar-accent-foreground: oklch(0.985 0.002 264.376);
-  --color-sidebar-ring: oklch(0.696 0.17 264.376);
-}
-
-/* Green */
-[data-preset="green"] {
-  --radius: 0.5rem;
-  --color-primary: oklch(0.527 0.154 150.069);
-  --color-primary-foreground: oklch(0.985 0.002 150.069);
-  --color-secondary: oklch(0.97 0.01 150.069);
-  --color-secondary-foreground: oklch(0.205 0.01 150.069);
-  --color-accent: oklch(0.97 0.01 150.069);
-  --color-accent-foreground: oklch(0.205 0.01 150.069);
-  --color-ring: oklch(0.527 0.154 150.069);
-  --color-sidebar-primary: oklch(0.527 0.154 150.069);
-  --color-sidebar-primary-foreground: oklch(0.985 0.002 150.069);
-  --color-sidebar-accent: oklch(0.97 0.01 150.069);
-  --color-sidebar-accent-foreground: oklch(0.205 0.01 150.069);
-  --color-sidebar-ring: oklch(0.527 0.154 150.069);
-}
-[data-preset="green"].dark {
-  --color-primary: oklch(0.696 0.17 150.069);
-  --color-primary-foreground: oklch(0.145 0.01 150.069);
-  --color-secondary: oklch(0.269 0.015 150.069);
-  --color-secondary-foreground: oklch(0.985 0.002 150.069);
-  --color-accent: oklch(0.269 0.015 150.069);
-  --color-accent-foreground: oklch(0.985 0.002 150.069);
-  --color-ring: oklch(0.696 0.17 150.069);
-  --color-sidebar-primary: oklch(0.696 0.17 150.069);
-  --color-sidebar-primary-foreground: oklch(0.145 0.01 150.069);
-  --color-sidebar-accent: oklch(0.330 0.015 150.069);
-  --color-sidebar-accent-foreground: oklch(0.985 0.002 150.069);
-  --color-sidebar-ring: oklch(0.696 0.17 150.069);
-}
-
-/* Orange */
-[data-preset="orange"] {
-  --radius: 0.5rem;
-  --color-primary: oklch(0.646 0.222 41.116);
-  --color-primary-foreground: oklch(0.985 0.002 41.116);
-  --color-secondary: oklch(0.97 0.012 41.116);
-  --color-secondary-foreground: oklch(0.205 0.01 41.116);
-  --color-accent: oklch(0.97 0.012 41.116);
-  --color-accent-foreground: oklch(0.205 0.01 41.116);
-  --color-ring: oklch(0.646 0.222 41.116);
-  --color-sidebar-primary: oklch(0.646 0.222 41.116);
-  --color-sidebar-primary-foreground: oklch(0.985 0.002 41.116);
-  --color-sidebar-accent: oklch(0.97 0.012 41.116);
-  --color-sidebar-accent-foreground: oklch(0.205 0.01 41.116);
-  --color-sidebar-ring: oklch(0.646 0.222 41.116);
-}
-[data-preset="orange"].dark {
-  --color-primary: oklch(0.769 0.188 41.116);
-  --color-primary-foreground: oklch(0.145 0.01 41.116);
-  --color-secondary: oklch(0.269 0.015 41.116);
-  --color-secondary-foreground: oklch(0.985 0.002 41.116);
-  --color-accent: oklch(0.269 0.015 41.116);
-  --color-accent-foreground: oklch(0.985 0.002 41.116);
-  --color-ring: oklch(0.769 0.188 41.116);
-  --color-sidebar-primary: oklch(0.769 0.188 41.116);
-  --color-sidebar-primary-foreground: oklch(0.145 0.01 41.116);
-  --color-sidebar-accent: oklch(0.330 0.015 41.116);
-  --color-sidebar-accent-foreground: oklch(0.985 0.002 41.116);
-  --color-sidebar-ring: oklch(0.769 0.188 41.116);
-}
-
 
 [data-preset="custom"] {
 }

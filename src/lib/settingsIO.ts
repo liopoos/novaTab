@@ -10,7 +10,7 @@ export interface NovaSettingsExport {
 }
 
 const VALID_PRESETS: ThemePreset[] = [
-  "default", "rose", "blue", "green", "orange", "rounded", "sharp", "custom",
+  "default", "blue", "claude", "contrast", "portfolio", "terminal", "rounded", "sharp", "custom",
 ];
 const VALID_FONTS: FontFamily[] = ["inter", "system", "mono", "serif", "custom"];
 const VALID_THEMES = ["light", "dark", "system"] as const;
@@ -48,6 +48,14 @@ function mergeAppSettings(raw: unknown): AppSettings {
       typeof s.rememberLastFolder === "boolean"
         ? s.rememberLastFolder
         : DEFAULT_SETTINGS.rememberLastFolder,
+    showRecentlyClosed:
+      typeof s.showRecentlyClosed === "boolean"
+        ? s.showRecentlyClosed
+        : DEFAULT_SETTINGS.showRecentlyClosed,
+    showMostVisited:
+      typeof s.showMostVisited === "boolean"
+        ? s.showMostVisited
+        : DEFAULT_SETTINGS.showMostVisited,
     language: VALID_LANGUAGES.includes(s.language as "en" | "zh")
       ? (s.language as "en" | "zh")
       : DEFAULT_SETTINGS.language,

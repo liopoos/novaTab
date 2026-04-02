@@ -1,0 +1,72 @@
+/* ── Terminal preset ── green-on-black retro terminal, always dark palette */
+/* Light: same green-on-black — terminal is always dark */
+[data-preset="terminal"] {
+  --color-background: oklch(0 0 0);
+  --color-foreground: oklch(0.8686 0.2776 144.4661);
+  --color-card: oklch(0.1149 0 0);
+  --color-card-foreground: oklch(0.8686 0.2776 144.4661);
+  --color-popover: oklch(0 0 0);
+  --color-popover-foreground: oklch(0.8686 0.2776 144.4661);
+  --color-primary: oklch(0.8686 0.2776 144.4661);
+  --color-primary-foreground: oklch(0 0 0);
+  --color-secondary: oklch(0.3053 0.1039 142.4953);
+  --color-secondary-foreground: oklch(0.8686 0.2776 144.4661);
+  --color-muted: oklch(0.1887 0.0642 142.4953);
+  --color-muted-foreground: oklch(0.5638 0.1872 143.2450);
+  --color-accent: oklch(0.8686 0.2776 144.4661);
+  --color-accent-foreground: oklch(0 0 0);
+  --color-destructive: oklch(0.6280 0.2577 29.2339);
+  --color-border: oklch(0.3053 0.1039 142.4953);
+  --color-input: oklch(0 0 0);
+  --color-ring: oklch(0.8686 0.2776 144.4661);
+  --color-chart-1: oklch(0.8686 0.2776 144.4661);
+  --color-chart-2: oklch(0.5638 0.1872 143.2450);
+  --color-chart-3: oklch(0.3053 0.1039 142.4953);
+  --color-chart-4: oklch(0.1179 0.0327 343.3438);
+  --color-chart-5: oklch(0.8686 0.2776 144.4661);
+  --color-sidebar: oklch(0.1149 0 0);
+  --color-sidebar-foreground: oklch(0.8686 0.2776 144.4661);
+  --color-sidebar-primary: oklch(0.8686 0.2776 144.4661);
+  --color-sidebar-primary-foreground: oklch(0 0 0);
+  --color-sidebar-accent: oklch(0.3053 0.1039 142.4953);
+  --color-sidebar-accent-foreground: oklch(0.8686 0.2776 144.4661);
+  --color-sidebar-border: oklch(0.3053 0.1039 142.4953);
+  --color-sidebar-ring: oklch(0.8686 0.2776 144.4661);
+  --radius: 0rem;
+}
+
+/* Dark: identical to light — terminal is always dark */
+[data-preset="terminal"].dark {
+  --color-background: oklch(0 0 0);
+  --color-foreground: oklch(0.8686 0.2776 144.4661);
+  --color-card: oklch(0.1149 0 0);
+  --color-card-foreground: oklch(0.8686 0.2776 144.4661);
+  --color-popover: oklch(0 0 0);
+  --color-popover-foreground: oklch(0.8686 0.2776 144.4661);
+  --color-primary: oklch(0.8686 0.2776 144.4661);
+  --color-primary-foreground: oklch(0 0 0);
+  --color-secondary: oklch(0.3053 0.1039 142.4953);
+  --color-secondary-foreground: oklch(0.8686 0.2776 144.4661);
+  --color-muted: oklch(0.1887 0.0642 142.4953);
+  --color-muted-foreground: oklch(0.5638 0.1872 143.2450);
+  --color-accent: oklch(0.8686 0.2776 144.4661);
+  --color-accent-foreground: oklch(0 0 0);
+  --color-destructive: oklch(0.6280 0.2577 29.2339);
+  --color-border: oklch(0.3053 0.1039 142.4953);
+  --color-input: oklch(0 0 0);
+  --color-ring: oklch(0.8686 0.2776 144.4661);
+  --color-chart-1: oklch(0.8686 0.2776 144.4661);
+  --color-chart-2: oklch(0.5638 0.1872 143.2450);
+  --color-chart-3: oklch(0.3053 0.1039 142.4953);
+  --color-chart-4: oklch(0.1179 0.0327 343.3438);
+  --color-chart-5: oklch(0.8686 0.2776 144.4661);
+  --color-sidebar: oklch(0.1149 0 0);
+  --color-sidebar-foreground: oklch(0.8686 0.2776 144.4661);
+  --color-sidebar-primary: oklch(0.8686 0.2776 144.4661);
+  --color-sidebar-primary-foreground: oklch(0 0 0);
+  --color-sidebar-accent: oklch(0.3053 0.1039 142.4953);
+  --color-sidebar-accent-foreground: oklch(0.8686 0.2776 144.4661);
+  --color-sidebar-border: oklch(0.3053 0.1039 142.4953);
+  --color-sidebar-ring: oklch(0.8686 0.2776 144.4661);
+  --radius: 0rem;
+}

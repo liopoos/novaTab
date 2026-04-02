@@ -1,0 +1,29 @@
+/* ── Blue preset ── */
+[data-preset="blue"] {
+  --color-primary: oklch(0.488 0.243 264.376);
+  --color-primary-foreground: oklch(0.985 0.002 264.376);
+  --color-secondary: oklch(0.97 0.012 264.376);
+  --color-secondary-foreground: oklch(0.205 0.01 264.376);
+  --color-accent: oklch(0.97 0.012 264.376);
+  --color-accent-foreground: oklch(0.205 0.01 264.376);
+  --color-ring: oklch(0.488 0.243 264.376);
+  --color-sidebar-primary: oklch(0.488 0.243 264.376);
+  --color-sidebar-primary-foreground: oklch(0.985 0.002 264.376);
+  --color-sidebar-accent: oklch(0.97 0.012 264.376);
+  --color-sidebar-accent-foreground: oklch(0.205 0.01 264.376);
+  --color-sidebar-ring: oklch(0.488 0.243 264.376);
+}
+[data-preset="blue"].dark {
+  --color-primary: oklch(0.696 0.17 264.376);
+  --color-primary-foreground: oklch(0.145 0.01 264.376);
+  --color-secondary: oklch(0.269 0.02 264.376);
+  --color-secondary-foreground: oklch(0.985 0.002 264.376);
+  --color-accent: oklch(0.269 0.02 264.376);
+  --color-accent-foreground: oklch(0.985 0.002 264.376);
+  --color-ring: oklch(0.696 0.17 264.376);
+  --color-sidebar-primary: oklch(0.696 0.17 264.376);
+  --color-sidebar-primary-foreground: oklch(0.145 0.01 264.376);
+  --color-sidebar-accent: oklch(0.330 0.02 264.376);
+  --color-sidebar-accent-foreground: oklch(0.985 0.002 264.376);
+  --color-sidebar-ring: oklch(0.696 0.17 264.376);
+}

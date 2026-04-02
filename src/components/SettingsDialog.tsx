@@ -24,6 +24,7 @@ import { useSettingsContext } from "@/contexts/SettingsContext";
 import { useThemeContext } from "@/contexts/ThemeContext";
 import { applyCustomTheme, expandHex } from "@/hooks/useTheme";
 import { APP_NAME, APP_REPO_LINK, APP_REPO_URL, APP_VERSION } from "@/lib/appInfo";
+import { isChromeAvailable } from "@/lib/favicon";
 import { cn } from "@/lib/utils";
 import { exportSettingsToJson, downloadSettingsFile, parseSettingsJson } from "@/lib/settingsIO";
 import logoSvg from "@/assets/nova-icon.svg?raw";
@@ -43,10 +44,11 @@ const PRESETS: PresetMeta[] = [
   { value: "default", primaryLight: "oklch(0.205 0 0)", primaryDark: "oklch(0.922 0 0)", radius: "6px" },
   { value: "rounded", primaryLight: "oklch(0.205 0 0)", primaryDark: "oklch(0.922 0 0)", radius: "12px" },
   { value: "sharp", primaryLight: "oklch(0.205 0 0)", primaryDark: "oklch(0.922 0 0)", radius: "2px" },
-  { value: "rose", primaryLight: "oklch(0.508 0.207 14.04)", primaryDark: "oklch(0.712 0.164 14.04)", radius: "6px" },
   { value: "blue", primaryLight: "oklch(0.488 0.243 264.376)", primaryDark: "oklch(0.696 0.17 264.376)", radius: "6px" },
-  { value: "green", primaryLight: "oklch(0.527 0.154 150.069)", primaryDark: "oklch(0.696 0.17 150.069)", radius: "6px" },
-  { value: "orange", primaryLight: "oklch(0.646 0.222 41.116)", primaryDark: "oklch(0.769 0.188 41.116)", radius: "6px" },
+  { value: "claude", primaryLight: "oklch(0.6171 0.1375 39.0427)", primaryDark: "oklch(0.6724 0.1308 38.7559)", radius: "16px" },
+  { value: "contrast", primaryLight: "oklch(0.4275 0.2562 27.33)", primaryDark: "oklch(0.6280 0.2577 29.2339)", radius: "0px" },
+  { value: "portfolio", primaryLight: "oklch(0.7414 0.0738 84.5946)", primaryDark: "oklch(0.8039 0.0702 84.7579)", radius: "12px" },
+  { value: "terminal", primaryLight: "oklch(0.8686 0.2776 144.4661)", primaryDark: "oklch(0.8686 0.2776 144.4661)", radius: "0px" },
 ];
 
 const FONT_OPTIONS: { value: Exclude<FontFamily, "custom">; label: string }[] = [
@@ -95,11 +97,17 @@ function Switch({ checked, onToggle }: { checked: boolean; onToggle: () => void 
 
 interface GeneralPanelProps {
   settings: AppSettings;
+  showBrowserFeatureSettings: boolean;
   updateSettings: (partial: Partial<AppSettings>) => void;
   onClearAllPins?: () => void;
 }
 
-function GeneralPanel({ settings, updateSettings, onClearAllPins }: GeneralPanelProps) {
+function GeneralPanel({
+  settings,
+  showBrowserFeatureSettings,
+  updateSettings,
+  onClearAllPins,
+}: GeneralPanelProps) {
   const { t, i18n } = useTranslation();
 
   const handleLanguageChange = (lang: "en" | "zh" | "ja") => {
@@ -125,6 +133,26 @@ function GeneralPanel({ settings, updateSettings, onClearAllPins }: GeneralPanel
           onToggle={() => updateSettings({ rememberLastFolder: !settings.rememberLastFolder })}
         />
       </div>
+
+      {showBrowserFeatureSettings && (
+        <div className="flex items-center justify-between">
+          <span className="text-sm font-medium">{t("settings.showRecentlyClosed")}</span>
+          <Switch
+            checked={settings.showRecentlyClosed}
+            onToggle={() => updateSettings({ showRecentlyClosed: !settings.showRecentlyClosed })}
+          />
+        </div>
+      )}
+
+      {showBrowserFeatureSettings && (
+        <div className="flex items-center justify-between">
+          <span className="text-sm font-medium">{t("settings.showMostVisited")}</span>
+          <Switch
+            checked={settings.showMostVisited}
+            onToggle={() => updateSettings({ showMostVisited: !settings.showMostVisited })}
+          />
+        </div>
+      )}
 
       <div className="flex items-center justify-between gap-4">
         <span className="text-sm font-medium">{t("settings.language")}</span>
@@ -237,10 +265,6 @@ function AboutPanel() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-col gap-1">
-        <div className="text-sm font-medium">{t("about.title")}</div>
-        <div className="text-xs text-muted-foreground">{t("about.subtitle")}</div>
-      </div>
       <div className="flex items-center gap-4">
         <div className="flex size-12 items-center justify-center rounded-md border border-border bg-muted/40">
           <div
@@ -701,6 +725,7 @@ export function SettingsDialog({ onClearAllPins, onOpen }: SettingsDialogProps) 
   const [activeTab, setActiveTab] = useState<Tab>("general");
   const { settings, updateSettings } = useSettingsContext();
   const { theme, resolvedTheme, setTheme, preset, setPreset } = useThemeContext();
+  const showBrowserFeatureSettings = isChromeAvailable;
   const [draft, setDraft] = useState<CustomThemeConfig>(() => settings.customTheme);
   const [importError, setImportError] = useState<string | null>(null);
   const [importSuccess, setImportSuccess] = useState(false);
@@ -767,6 +792,7 @@ export function SettingsDialog({ onClearAllPins, onOpen }: SettingsDialogProps) 
     { id: "data", label: t("settings.data"), icon: <Database size={15} /> },
     { id: "about", label: t("about.title"), icon: <Info size={15} /> },
   ];
+  const activeNavItem = NAV_ITEMS.find(({ id }) => id === activeTab) ?? NAV_ITEMS[0];
 
   const [open, setOpen] = useState(false);
 
@@ -788,7 +814,7 @@ export function SettingsDialog({ onClearAllPins, onOpen }: SettingsDialogProps) 
         <TooltipContent side="top">{t("settings.title")}</TooltipContent>
       </Tooltip>
 
-      <DialogContent className="p-0 sm:max-w-2xl overflow-hidden flex flex-col max-h-[90dvh]" aria-describedby={undefined}>
+      <DialogContent className="p-0 sm:max-w-2xl overflow-hidden flex flex-col h-[640px] max-h-[90dvh]" aria-describedby={undefined}>
         <DialogTitle className="sr-only">{t("settings.title")}</DialogTitle>
 
         <nav className="flex sm:hidden shrink-0 border-b border-border bg-muted/30 px-2 pt-2 gap-1">
@@ -827,44 +853,50 @@ export function SettingsDialog({ onClearAllPins, onOpen }: SettingsDialogProps) 
             ))}
           </nav>
 
-          <div className="flex-1 min-h-0 overflow-y-auto px-4 py-4 sm:px-6 sm:pt-12 sm:pr-12">
-            {activeTab === "general" && (
-              <GeneralPanel
-                settings={settings}
-                updateSettings={updateSettings}
-                onClearAllPins={onClearAllPins}
-              />
-            )}
-            {activeTab === "appearance" && (
-              <AppearancePanel
-                theme={theme}
-                resolvedTheme={resolvedTheme}
-                preset={preset}
-                customTheme={settings.customTheme}
-                sidebarStyle={settings.sidebarStyle ?? "style1"}
-                setTheme={setTheme}
-                setPreset={setPreset}
-                updateSettings={updateSettings}
-                onOpenCustomTab={handleOpenCustomTab}
-              />
-            )}
-            {activeTab === "custom" && (
-              <CustomPanel
-                draft={draft}
-                onUpdate={updateDraft}
-                onApply={handleApplyCustomTheme}
-                onReset={handleResetDraft}
-              />
-            )}
-            {activeTab === "data" && (
-              <DataPanel
-                onExport={handleExport}
-                onImport={handleImport}
-                importError={importError}
-                importSuccess={importSuccess}
-              />
-            )}
-            {activeTab === "about" && <AboutPanel />}
+          <div className="flex-1 min-h-0 flex flex-col">
+            <div className="shrink-0 border-b border-border bg-background/80 px-4 py-3 sm:px-6">
+              <div className="text-sm font-medium">{activeNavItem.label}</div>
+            </div>
+            <div className="flex-1 min-h-0 overflow-y-auto px-4 py-4 sm:px-6 sm:py-5 sm:pr-12">
+              {activeTab === "general" && (
+                <GeneralPanel
+                  settings={settings}
+                  showBrowserFeatureSettings={showBrowserFeatureSettings}
+                  updateSettings={updateSettings}
+                  onClearAllPins={onClearAllPins}
+                />
+              )}
+              {activeTab === "appearance" && (
+                <AppearancePanel
+                  theme={theme}
+                  resolvedTheme={resolvedTheme}
+                  preset={preset}
+                  customTheme={settings.customTheme}
+                  sidebarStyle={settings.sidebarStyle ?? "style1"}
+                  setTheme={setTheme}
+                  setPreset={setPreset}
+                  updateSettings={updateSettings}
+                  onOpenCustomTab={handleOpenCustomTab}
+                />
+              )}
+              {activeTab === "custom" && (
+                <CustomPanel
+                  draft={draft}
+                  onUpdate={updateDraft}
+                  onApply={handleApplyCustomTheme}
+                  onReset={handleResetDraft}
+                />
+              )}
+              {activeTab === "data" && (
+                <DataPanel
+                  onExport={handleExport}
+                  onImport={handleImport}
+                  importError={importError}
+                  importSuccess={importSuccess}
+                />
+              )}
+              {activeTab === "about" && <AboutPanel />}
+            </div>
           </div>
         </div>
       </DialogContent>
