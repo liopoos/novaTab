@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import type { AppSettings } from "@/types";
-import { DEFAULT_SETTINGS } from "@/types";
+import { DEFAULT_SETTINGS, isExtraSectionCount } from "@/types";
 
 const STORAGE_KEY = "nova-settings";
 
@@ -19,9 +19,18 @@ function enforceEnvironmentSettings(settings: AppSettings): AppSettings {
 }
 
 function mergeSettings(stored: Partial<AppSettings>): AppSettings {
+  const recentlyClosedCount = isExtraSectionCount(stored.recentlyClosedCount)
+    ? stored.recentlyClosedCount
+    : DEFAULT_SETTINGS.recentlyClosedCount;
+  const mostVisitedCount = isExtraSectionCount(stored.mostVisitedCount)
+    ? stored.mostVisitedCount
+    : DEFAULT_SETTINGS.mostVisitedCount;
+
   return enforceEnvironmentSettings({
     ...DEFAULT_SETTINGS,
     ...stored,
+    recentlyClosedCount,
+    mostVisitedCount,
     customTheme: {
       ...DEFAULT_SETTINGS.customTheme,
       ...(stored.customTheme ?? {}),
@@ -37,35 +46,56 @@ function isChromeStorageAvailable(): boolean {
   );
 }
 
+function readSettingsCache(): AppSettings {
+  const fallback = enforceEnvironmentSettings(DEFAULT_SETTINGS);
+  let raw: string | null = null;
+
+  try {
+    raw = localStorage.getItem(STORAGE_KEY);
+  } catch {
+    return fallback;
+  }
+
+  if (!raw) return fallback;
+
+  try {
+    return mergeSettings(JSON.parse(raw));
+  } catch {
+    return fallback;
+  }
+}
+
+function writeSettingsCache(settings: AppSettings): void {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+  } catch {
+    // Ignore cache write failures.
+  }
+}
+
 async function readSettings(): Promise<AppSettings> {
   if (isChromeStorageAvailable()) {
     return new Promise((resolve) => {
       chrome.storage.sync.get(STORAGE_KEY, (result) => {
-        const stored = result[STORAGE_KEY];
-        resolve(stored ? mergeSettings(stored) : enforceEnvironmentSettings(DEFAULT_SETTINGS));
+        const stored = result[STORAGE_KEY] as Partial<AppSettings> | undefined;
+        const resolved = stored ? mergeSettings(stored) : readSettingsCache();
+        writeSettingsCache(resolved);
+        resolve(resolved);
       });
     });
   }
-  const raw = localStorage.getItem(STORAGE_KEY);
-  if (raw) {
-    try {
-      return mergeSettings(JSON.parse(raw));
-    } catch {
-      return enforceEnvironmentSettings(DEFAULT_SETTINGS);
-    }
-  }
-  return enforceEnvironmentSettings(DEFAULT_SETTINGS);
+  return readSettingsCache();
 }
 
 async function writeSettings(settings: AppSettings): Promise<void> {
   const normalized = enforceEnvironmentSettings(settings);
+  writeSettingsCache(normalized);
 
   if (isChromeStorageAvailable()) {
     return new Promise((resolve) => {
       chrome.storage.sync.set({ [STORAGE_KEY]: normalized }, resolve);
     });
   }
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized));
 }
 
 interface UseSettingsReturn {
@@ -75,16 +105,7 @@ interface UseSettingsReturn {
 }
 
 function readSettingsSync(): AppSettings {
-  if (isChromeStorageAvailable()) return enforceEnvironmentSettings(DEFAULT_SETTINGS);
-  const raw = localStorage.getItem(STORAGE_KEY);
-  if (raw) {
-    try {
-      return mergeSettings(JSON.parse(raw));
-    } catch {
-      return enforceEnvironmentSettings(DEFAULT_SETTINGS);
-    }
-  }
-  return enforceEnvironmentSettings(DEFAULT_SETTINGS);
+  return readSettingsCache();
 }
 
 export function useSettings(): UseSettingsReturn {
@@ -106,7 +127,16 @@ export function useSettings(): UseSettingsReturn {
     ) => {
       if (area === "sync" && changes[STORAGE_KEY]) {
         const newVal = changes[STORAGE_KEY].newValue;
-        if (newVal) setSettings(mergeSettings(newVal));
+        if (newVal && typeof newVal === "object") {
+          const merged = mergeSettings(newVal as Partial<AppSettings>);
+          writeSettingsCache(merged);
+          setSettings(merged);
+        }
+        if (newVal === undefined) {
+          const fallback = enforceEnvironmentSettings(DEFAULT_SETTINGS);
+          writeSettingsCache(fallback);
+          setSettings(fallback);
+        }
       }
     };
 

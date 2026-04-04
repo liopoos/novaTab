@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { isChromeAvailable } from "@/lib/favicon";
+import { DEFAULT_SETTINGS } from "@/types";
+import type { ExtraSectionCount } from "@/types";
 
 export interface MostVisitedSite {
   title: string;
@@ -11,9 +13,9 @@ interface UseMostVisitedReturn {
   loading: boolean;
 }
 
-const MAX_RESULTS = 10;
-
-export function useMostVisited(): UseMostVisitedReturn {
+export function useMostVisited(
+  limit: ExtraSectionCount = DEFAULT_SETTINGS.mostVisitedCount
+): UseMostVisitedReturn {
   const [sites, setSites] = useState<MostVisitedSite[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -30,11 +32,11 @@ export function useMostVisited(): UseMostVisitedReturn {
         return;
       }
       setSites(
-        topSites.slice(0, MAX_RESULTS).map((s) => ({ title: s.title, url: s.url }))
+        topSites.slice(0, limit).map((s) => ({ title: s.title, url: s.url }))
       );
       setLoading(false);
     });
-  }, []);
+  }, [limit]);
 
   return { sites, loading };
 }

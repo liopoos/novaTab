@@ -32,6 +32,7 @@ src/
     BookmarkCard.tsx   # Individual bookmark card with favicon fallback chain
     FolderGrid.tsx     # Subfolder card grid
     SearchBar.tsx      # Debounced search input (300ms) with clear button
+    BookmarkCheckerDialog.tsx  # Bookmark connectivity checker dialog (concurrent fetch, progress, delete)
     BreadcrumbNav.tsx  # Folder breadcrumb trail
     SettingsDialog.tsx
     ShortcutsDialog.tsx
@@ -42,6 +43,7 @@ src/
     ThemeContext.tsx   # Theme state provider
     SettingsContext.tsx
   hooks/               # Custom hooks
+    useBookmarkChecker.ts  # Semaphore-based concurrent bookmark probe hook
     useBookmarks.ts    # Bookmark state, selection, search, persistence
     useSettings.ts     # App settings (storage-backed, merged with defaults)
     useTheme.ts        # Theme/preset/dark mode + custom OKLCH theme
@@ -55,7 +57,7 @@ src/
     appInfo.ts         # APP_NAME, APP_VERSION from manifest.json
   types/               # Shared domain types, exported via index.ts barrel
     bookmark.ts        # BookmarkNode, BreadcrumbItem
-    settings.ts        # AppSettings, ThemePreset, DEFAULT_SETTINGS, CustomThemeConfig
+    settings.ts        # AppSettings, ThemePreset, DEFAULT_SETTINGS, CustomThemeConfig, checkerConcurrency, checkerTimeoutMs
     index.ts           # Barrel: export * from each type file
   styles/globals.css   # Tailwind v4 entry + CSS variables for all presets
   i18n/                # i18next config + locale JSONs

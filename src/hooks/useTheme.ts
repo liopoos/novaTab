@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useLayoutEffect, useCallback } from "react";
 import type { ThemePreset, CustomThemeConfig } from "@/types";
 
 type Theme = "light" | "dark" | "system";
@@ -6,6 +6,83 @@ type ResolvedTheme = "light" | "dark";
 
 const STORAGE_KEY = "nova-theme";
 const PRESET_STORAGE_KEY = "nova-preset";
+const SETTINGS_STORAGE_KEY = "nova-settings";
+const THEME_VALUES: Theme[] = ["light", "dark", "system"];
+const FONT_FAMILY_VALUES: CustomThemeConfig["fontFamily"][] = [
+  "inter",
+  "system",
+  "mono",
+  "serif",
+  "custom",
+];
+const PRESET_VALUES: ThemePreset[] = [
+  "default",
+  "blue",
+  "claude",
+  "contrast",
+  "portfolio",
+  "terminal",
+  "rounded",
+  "sharp",
+  "custom",
+];
+
+function isThemeValue(value: string | null): value is Theme {
+  return value !== null && THEME_VALUES.includes(value as Theme);
+}
+
+function isThemePresetValue(value: string | null): value is ThemePreset {
+  return value !== null && PRESET_VALUES.includes(value as ThemePreset);
+}
+
+function isCustomThemeConfig(value: unknown): value is CustomThemeConfig {
+  if (!value || typeof value !== "object") return false;
+  const candidate = value as Record<string, unknown>;
+  return (
+    typeof candidate.primaryColor === "string" &&
+    typeof candidate.radius === "number" &&
+    typeof candidate.customFontFamily === "string" &&
+    typeof candidate.fontFamily === "string" &&
+    FONT_FAMILY_VALUES.includes(candidate.fontFamily as CustomThemeConfig["fontFamily"]) &&
+    (candidate.surfaceStyle === "elevated" || candidate.surfaceStyle === "bordered")
+  );
+}
+
+function readCustomThemeConfigFromCache(): CustomThemeConfig | null {
+  const raw = readStorageCache(SETTINGS_STORAGE_KEY);
+  if (!raw) return null;
+
+  try {
+    const parsed = JSON.parse(raw) as { customTheme?: unknown };
+    return isCustomThemeConfig(parsed.customTheme) ? parsed.customTheme : null;
+  } catch {
+    return null;
+  }
+}
+
+function readStorageCache(key: string): string | null {
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function writeStorageCache(key: string, value: string): void {
+  try {
+    localStorage.setItem(key, value);
+  } catch {
+    // Ignore cache write failures.
+  }
+}
+
+function removeStorageCache(key: string): void {
+  try {
+    localStorage.removeItem(key);
+  } catch {
+    // Ignore cache removal failures.
+  }
+}
 
 function isChromeStorageAvailable(): boolean {
   return (
@@ -19,24 +96,28 @@ async function readStorageItem(key: string): Promise<string | null> {
   if (isChromeStorageAvailable()) {
     return new Promise((resolve) => {
       chrome.storage.sync.get(key, (result) => {
-        resolve(typeof result[key] === "string" ? result[key] : null);
+        const syncValue = typeof result[key] === "string" ? result[key] : null;
+        if (syncValue !== null) {
+          writeStorageCache(key, syncValue);
+          resolve(syncValue);
+          return;
+        }
+        resolve(readStorageCache(key));
       });
     });
   }
-  return localStorage.getItem(key);
+  return readStorageCache(key);
 }
 
 function writeStorageItem(key: string, value: string): void {
+  writeStorageCache(key, value);
   if (isChromeStorageAvailable()) {
     chrome.storage.sync.set({ [key]: value });
-  } else {
-    localStorage.setItem(key, value);
   }
 }
 
 function readStorageItemSync(key: string): string | null {
-  if (isChromeStorageAvailable()) return null;
-  return localStorage.getItem(key);
+  return readStorageCache(key);
 }
 
 function getSystemTheme(): ResolvedTheme {
@@ -66,6 +147,26 @@ function applyPreset(p: ThemePreset) {
 function resolveTheme(theme: Theme): ResolvedTheme {
   if (theme === "system") return getSystemTheme();
   return theme;
+}
+
+export function bootstrapThemeFromStorageCache(): void {
+  const storedTheme = readStorageItemSync(STORAGE_KEY);
+  const theme = isThemeValue(storedTheme) ? storedTheme : "light";
+  const storedPreset = readStorageItemSync(PRESET_STORAGE_KEY);
+  const preset = isThemePresetValue(storedPreset) ? storedPreset : "default";
+  const resolvedTheme = resolveTheme(theme);
+
+  applyTheme(resolvedTheme);
+  applyPreset(preset);
+
+  if (preset === "custom") {
+    const cachedCustomTheme = readCustomThemeConfigFromCache();
+    if (cachedCustomTheme) {
+      applyCustomTheme(cachedCustomTheme, resolvedTheme === "dark");
+    }
+  } else {
+    clearCustomTheme();
+  }
 }
 
 export function expandHex(hex: string): string {
@@ -186,22 +287,26 @@ export function clearCustomTheme() {
 
 export function useTheme() {
   const [theme, setThemeState] = useState<Theme>(() => {
-    const stored = readStorageItemSync(STORAGE_KEY) as Theme | null;
-    return stored ?? "light";
+    const stored = readStorageItemSync(STORAGE_KEY);
+    return isThemeValue(stored) ? stored : "light";
   });
 
   const [preset, setPresetState] = useState<ThemePreset>(() => {
-    const stored = readStorageItemSync(PRESET_STORAGE_KEY) as ThemePreset | null;
-    return stored ?? "default";
+    const stored = readStorageItemSync(PRESET_STORAGE_KEY);
+    return isThemePresetValue(stored) ? stored : "default";
   });
 
   useEffect(() => {
     if (!isChromeStorageAvailable()) return;
     readStorageItem(STORAGE_KEY).then((stored) => {
-      if (stored) setThemeState(stored as Theme);
+      if (isThemeValue(stored)) {
+        setThemeState(stored);
+      }
     });
     readStorageItem(PRESET_STORAGE_KEY).then((stored) => {
-      if (stored) setPresetState(stored as ThemePreset);
+      if (isThemePresetValue(stored)) {
+        setPresetState(stored);
+      }
     });
 
     const handler = (
@@ -209,11 +314,32 @@ export function useTheme() {
       area: string
     ) => {
       if (area !== "sync") return;
-      if (changes[STORAGE_KEY]?.newValue) {
-        setThemeState(changes[STORAGE_KEY].newValue as Theme);
+      const themeChange = changes[STORAGE_KEY];
+      if (themeChange) {
+        const nextTheme =
+          typeof themeChange.newValue === "string" ? themeChange.newValue : null;
+        if (isThemeValue(nextTheme)) {
+          writeStorageCache(STORAGE_KEY, nextTheme);
+          setThemeState(nextTheme);
+        }
+        if (themeChange.newValue === undefined) {
+          removeStorageCache(STORAGE_KEY);
+          setThemeState("light");
+        }
       }
-      if (changes[PRESET_STORAGE_KEY]?.newValue) {
-        setPresetState(changes[PRESET_STORAGE_KEY].newValue as ThemePreset);
+
+      const presetChange = changes[PRESET_STORAGE_KEY];
+      if (presetChange) {
+        const nextPreset =
+          typeof presetChange.newValue === "string" ? presetChange.newValue : null;
+        if (isThemePresetValue(nextPreset)) {
+          writeStorageCache(PRESET_STORAGE_KEY, nextPreset);
+          setPresetState(nextPreset);
+        }
+        if (presetChange.newValue === undefined) {
+          removeStorageCache(PRESET_STORAGE_KEY);
+          setPresetState("default");
+        }
       }
     };
     chrome.storage.onChanged.addListener(handler);
@@ -222,11 +348,11 @@ export function useTheme() {
 
   const resolvedTheme = resolveTheme(theme);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     applyTheme(resolvedTheme);
   }, [resolvedTheme]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     applyPreset(preset);
     if (preset !== "custom") {
       clearCustomTheme();

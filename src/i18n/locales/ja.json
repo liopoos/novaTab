@@ -55,7 +55,9 @@
     "openInNewTab": "リンクを新しいタブで開く",
     "rememberLastFolder": "最後に開いたフォルダを記憶する",
     "showRecentlyClosed": "最近閉じたタブを表示",
+    "recentlyClosedCount": "最近閉じたタブの表示件数",
     "showMostVisited": "よく見るサイトを表示",
+    "mostVisitedCount": "よく見るサイトの表示件数",
     "language": "言語",
     "theme": "テーマ",
     "appearance": "外観",
@@ -124,5 +126,32 @@
     "collapseAll": "すべてのフォルダを折り畳む",
     "showShortcuts": "ショートカットを表示",
     "togglePin": "現在のフォルダをスター／解除"
+  },
+  "checker": {
+    "tooltip": "ブックマークの接続確認",
+    "title": "ブックマークチェッカー",
+    "description": "現在のビューに表示されている {{count}} 件のブックマークにアクセスできるか確認します。",
+    "startButton": "確認開始",
+    "progress": "{{checked}} / {{total}} 確認済み",
+    "done": "確認完了",
+    "cancelled": "確認をキャンセルしました",
+    "accessible": "アクセス可能",
+    "inaccessible": "アクセス不可",
+    "ok": "OK",
+    "fail": "失敗",
+    "cancel": "停止",
+    "recheck": "再確認",
+    "deleteButton": "失敗した {{count}} 件を削除",
+    "deleteConfirm1": "よろしいですか？",
+    "deleteConfirm2": "最終確認！",
+    "deleteCancel": "キャンセル",
+    "settings": {
+      "title": "チェッカー",
+      "concurrency": "同時リクエスト数",
+      "concurrencyHint": "最大 8",
+      "timeout": "リクエストタイムアウト",
+      "timeoutUnit": "秒",
+      "timeoutHint": "リクエストごとの最大待機時間（1〜30秒）"
+    }
   }
 }

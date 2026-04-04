@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from "react";
-import { Brush, Database, Download, Info, Monitor, Moon, Palette, Settings, Sun, Upload } from "lucide-react";
+import { Brush, Database, Download, Info, Monitor, Moon, Palette, Settings, Sun, Upload, Wifi } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,18 +20,18 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { applyCustomTheme, expandHex } from "@/hooks/useTheme";
 import { useSettingsContext } from "@/contexts/SettingsContext";
 import { useThemeContext } from "@/contexts/ThemeContext";
-import { applyCustomTheme, expandHex } from "@/hooks/useTheme";
 import { APP_NAME, APP_REPO_LINK, APP_REPO_URL, APP_VERSION } from "@/lib/appInfo";
 import { isChromeAvailable } from "@/lib/favicon";
 import { cn } from "@/lib/utils";
 import { exportSettingsToJson, downloadSettingsFile, parseSettingsJson } from "@/lib/settingsIO";
 import logoSvg from "@/assets/nova-icon.svg?raw";
-import { DEFAULT_CUSTOM_THEME } from "@/types";
+import { DEFAULT_CUSTOM_THEME, EXTRA_SECTION_COUNT_OPTIONS, isExtraSectionCount } from "@/types";
 import type { AppSettings, ThemePreset, CustomThemeConfig, FontFamily, SidebarStyle } from "@/types";
 
-type Tab = "general" | "appearance" | "custom" | "data" | "about";
+type Tab = "general" | "appearance" | "custom" | "data" | "checker" | "about";
 
 interface PresetMeta {
   value: ThemePreset;
@@ -116,6 +116,18 @@ function GeneralPanel({
     localStorage.setItem("nova-language", lang);
   };
 
+  const handleRecentlyClosedCountChange = (value: string) => {
+    const parsed = Number(value);
+    if (!isExtraSectionCount(parsed)) return;
+    updateSettings({ recentlyClosedCount: parsed });
+  };
+
+  const handleMostVisitedCountChange = (value: string) => {
+    const parsed = Number(value);
+    if (!isExtraSectionCount(parsed)) return;
+    updateSettings({ mostVisitedCount: parsed });
+  };
+
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between">
@@ -145,12 +157,54 @@ function GeneralPanel({
       )}
 
       {showBrowserFeatureSettings && (
+        <div className="flex items-center justify-between gap-4">
+          <span className="text-sm font-medium">{t("settings.recentlyClosedCount")}</span>
+          <Select
+            value={String(settings.recentlyClosedCount)}
+            onValueChange={handleRecentlyClosedCountChange}
+          >
+            <SelectTrigger className="w-24 h-8 text-xs">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {EXTRA_SECTION_COUNT_OPTIONS.map((count) => (
+                <SelectItem key={count} value={String(count)}>
+                  {count}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      )}
+
+      {showBrowserFeatureSettings && (
         <div className="flex items-center justify-between">
           <span className="text-sm font-medium">{t("settings.showMostVisited")}</span>
           <Switch
             checked={settings.showMostVisited}
             onToggle={() => updateSettings({ showMostVisited: !settings.showMostVisited })}
           />
+        </div>
+      )}
+
+      {showBrowserFeatureSettings && (
+        <div className="flex items-center justify-between gap-4">
+          <span className="text-sm font-medium">{t("settings.mostVisitedCount")}</span>
+          <Select
+            value={String(settings.mostVisitedCount)}
+            onValueChange={handleMostVisitedCountChange}
+          >
+            <SelectTrigger className="w-24 h-8 text-xs">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {EXTRA_SECTION_COUNT_OPTIONS.map((count) => (
+                <SelectItem key={count} value={String(count)}>
+                  {count}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       )}
 
@@ -715,6 +769,76 @@ function CustomPanel({ draft, onUpdate, onApply, onReset }: CustomPanelProps) {
   );
 }
 
+interface CheckerPanelProps {
+  settings: AppSettings;
+  updateSettings: (partial: Partial<AppSettings>) => void;
+}
+
+function CheckerPanel({ settings, updateSettings }: CheckerPanelProps) {
+  const { t } = useTranslation();
+  const timeoutSec = Math.round(settings.checkerTimeoutMs / 1000);
+  const [primaryColor, setPrimaryColor] = useState<string>("");
+
+  useEffect(() => {
+    const color = getComputedStyle(document.documentElement)
+      .getPropertyValue("--color-primary")
+      .trim();
+    setPrimaryColor(color);
+  }, [settings]);
+
+  return (
+    <div className="space-y-5">
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <label className="text-sm font-medium">{t("checker.settings.concurrency")}</label>
+          <span className="text-sm tabular-nums font-medium w-6 text-right">
+            {settings.checkerConcurrency}
+          </span>
+        </div>
+        <input
+          type="range"
+          min={1}
+          max={8}
+          step={1}
+          value={settings.checkerConcurrency}
+          onChange={(e) => updateSettings({ checkerConcurrency: parseInt(e.target.value, 10) })}
+          className="w-full h-1.5 rounded-full appearance-none bg-muted cursor-pointer"
+          style={{ accentColor: primaryColor }}
+        />
+        <div className="flex justify-between text-[10px] text-muted-foreground">
+          <span>1</span>
+          <span className="text-xs text-muted-foreground">{t("checker.settings.concurrencyHint")}</span>
+          <span>8</span>
+        </div>
+      </div>
+
+      <div className="space-y-3">
+        <div className="flex items-center justify-between gap-4">
+          <label className="text-sm font-medium">{t("checker.settings.timeout")}</label>
+          <div className="flex items-center gap-1.5">
+            <input
+              type="number"
+              min={1}
+              max={30}
+              step={1}
+              value={timeoutSec}
+              onChange={(e) => {
+                const v = parseInt(e.target.value, 10);
+                if (!isNaN(v)) {
+                  updateSettings({ checkerTimeoutMs: Math.min(30, Math.max(1, v)) * 1000 });
+                }
+              }}
+              className="h-8 w-16 rounded-md border border-input bg-background px-2 text-sm text-right tabular-nums focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+            />
+            <span className="text-xs text-muted-foreground">{t("checker.settings.timeoutUnit")}</span>
+          </div>
+        </div>
+        <p className="text-xs text-muted-foreground">{t("checker.settings.timeoutHint")}</p>
+      </div>
+    </div>
+  );
+}
+
 interface SettingsDialogProps {
   onClearAllPins?: () => void;
   onOpen?: () => void;
@@ -790,6 +914,7 @@ export function SettingsDialog({ onClearAllPins, onOpen }: SettingsDialogProps) 
     { id: "appearance", label: t("settings.appearance"), icon: <Palette size={15} /> },
     { id: "custom", label: t("customTheme.title"), icon: <Brush size={15} /> },
     { id: "data", label: t("settings.data"), icon: <Database size={15} /> },
+    { id: "checker", label: t("checker.settings.title"), icon: <Wifi size={15} /> },
     { id: "about", label: t("about.title"), icon: <Info size={15} /> },
   ];
   const activeNavItem = NAV_ITEMS.find(({ id }) => id === activeTab) ?? NAV_ITEMS[0];
@@ -894,6 +1019,9 @@ export function SettingsDialog({ onClearAllPins, onOpen }: SettingsDialogProps) 
                   importError={importError}
                   importSuccess={importSuccess}
                 />
+              )}
+              {activeTab === "checker" && (
+                <CheckerPanel settings={settings} updateSettings={updateSettings} />
               )}
               {activeTab === "about" && <AboutPanel />}
             </div>

@@ -95,7 +95,7 @@ interface RecentlyClosedSectionProps {
 
 export function RecentlyClosedSection({ settings }: RecentlyClosedSectionProps) {
   const { t } = useTranslation();
-  const { closedTabs, restore } = useRecentlyClosed();
+  const { closedTabs, restore } = useRecentlyClosed(settings.recentlyClosedCount);
 
   const isElevated =
     settings.preset === "custom" &&
@@ -113,7 +113,6 @@ export function RecentlyClosedSection({ settings }: RecentlyClosedSectionProps) 
 
   return (
     <div>
-      <SectionHeading>{t("sidebar.recentlyClosed")}</SectionHeading>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-3">
         {closedTabs.map((item, i) => (
           <TabCard
@@ -139,7 +138,7 @@ interface MostVisitedSectionProps {
 
 export function MostVisitedSection({ settings }: MostVisitedSectionProps) {
   const { t } = useTranslation();
-  const { sites } = useMostVisited();
+  const { sites } = useMostVisited(settings.mostVisitedCount);
 
   const isElevated =
     settings.preset === "custom" &&
@@ -149,7 +148,6 @@ export function MostVisitedSection({ settings }: MostVisitedSectionProps) {
 
   return (
     <div>
-      <SectionHeading>{t("sidebar.mostVisited")}</SectionHeading>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-3">
         {sites.map((site, i) => (
           <TabCard
