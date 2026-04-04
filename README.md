@@ -23,6 +23,7 @@ English | [中文](./README.zh.md)
 - 🌗 **Dark / Light / System** — follows your OS preference
 - 🌐 **i18n** — English, Chinese, Japanese
 - ⌨️ **Keyboard shortcuts** — `/` search · `[`/`]` collapse/expand · `H` home · `?` help
+- 🔗 **Bookmark checker** — concurrently probe bookmarks for accessibility, view results, and delete broken ones in bulk
 
 ## Tech Stack
 
