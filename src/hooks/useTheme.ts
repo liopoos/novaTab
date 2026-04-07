@@ -102,7 +102,8 @@ async function readStorageItem(key: string): Promise<string | null> {
           resolve(syncValue);
           return;
         }
-        resolve(readStorageCache(key));
+        removeStorageCache(key);
+        resolve(null);
       });
     });
   }
