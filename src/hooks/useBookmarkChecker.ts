@@ -139,7 +139,7 @@ export function useBookmarkChecker(): UseBookmarkCheckerReturn {
       let result: Partial<BookmarkCheckResult>;
       try {
         const timeout =
-          AbortSignal.timeout && AbortSignal.any
+          typeof AbortSignal.timeout === "function" && typeof AbortSignal.any === "function"
             ? AbortSignal.any([signal, AbortSignal.timeout(timeoutMs)])
             : signal;
         const { ok, httpStatus } = await probeUrl(url, timeout);
