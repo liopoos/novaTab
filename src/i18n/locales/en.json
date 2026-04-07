@@ -55,7 +55,9 @@
     "openInNewTab": "Open links in new tab",
     "rememberLastFolder": "Remember last opened folder",
     "showRecentlyClosed": "Show Recently Closed",
+    "recentlyClosedCount": "Recently Closed items",
     "showMostVisited": "Show Most Visited",
+    "mostVisitedCount": "Most Visited items",
     "language": "Language",
     "theme": "Theme",
     "appearance": "Appearance",
@@ -124,5 +126,32 @@
     "collapseAll": "Collapse all folders",
     "showShortcuts": "Show shortcuts",
     "togglePin": "Star / unstar current folder"
+  },
+  "checker": {
+    "tooltip": "Check bookmark accessibility",
+    "title": "Bookmark Checker",
+    "description": "Test whether the {{count}} bookmark(s) shown in the current view are accessible.",
+    "startButton": "Start Check",
+    "progress": "{{checked}} / {{total}} checked",
+    "done": "Check complete",
+    "cancelled": "Check cancelled",
+    "accessible": "accessible",
+    "inaccessible": "inaccessible",
+    "ok": "OK",
+    "fail": "Fail",
+    "cancel": "Stop",
+    "recheck": "Re-check",
+    "deleteButton": "Delete {{count}} failed",
+    "deleteConfirm1": "Sure?",
+    "deleteConfirm2": "Final confirm — cannot undo!",
+    "deleteCancel": "Cancel",
+    "settings": {
+      "title": "Checker",
+      "concurrency": "Concurrent requests",
+      "concurrencyHint": "max 8",
+      "timeout": "Request timeout",
+      "timeoutUnit": "sec",
+      "timeoutHint": "Maximum wait time per request (1–30 seconds)"
+    }
   }
 }

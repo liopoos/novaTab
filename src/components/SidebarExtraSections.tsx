@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { Clock, TrendingUp, ChevronDown, ChevronRight, ExternalLink } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { getFaviconUrl } from "@/lib/favicon";
+import { Separator } from "@/components/ui/separator";
 import { useRecentlyClosed } from "@/hooks/useRecentlyClosed";
 import type { ClosedTab } from "@/hooks/useRecentlyClosed";
 import { useMostVisited } from "@/hooks/useMostVisited";
 import type { MostVisitedSite } from "@/hooks/useMostVisited";
-import { Separator } from "@/components/ui/separator";
-import { isChromeAvailable } from "@/lib/favicon";
+import { useSettingsContext } from "@/contexts/SettingsContext";
+import { getFaviconUrl, isChromeAvailable } from "@/lib/favicon";
 
 function openUrl(url: string): void {
   if (isChromeAvailable && chrome.tabs) {
@@ -88,7 +88,8 @@ function EmptyHint({ text }: { text: string }) {
 export function RecentlyClosedSection() {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
-  const { closedTabs, restore } = useRecentlyClosed();
+  const { settings } = useSettingsContext();
+  const { closedTabs, restore } = useRecentlyClosed(settings.recentlyClosedCount);
 
   return (
     <div>
@@ -151,7 +152,8 @@ function ClosedItem({ item, onRestore }: ClosedItemProps) {
 export function MostVisitedSection() {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
-  const { sites } = useMostVisited();
+  const { settings } = useSettingsContext();
+  const { sites } = useMostVisited(settings.mostVisitedCount);
 
   return (
     <div>

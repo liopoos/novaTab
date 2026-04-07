@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { isChromeAvailable } from "@/lib/favicon";
+import { DEFAULT_SETTINGS } from "@/types";
+import type { ExtraSectionCount } from "@/types";
 
 export interface ClosedTab {
   title: string;
@@ -16,15 +18,13 @@ interface UseRecentlyClosedReturn {
   refresh: () => void;
 }
 
-const MAX_RESULTS = 10;
-
-function fetchClosed(): Promise<ClosedTab[]> {
+function fetchClosed(maxResults: ExtraSectionCount): Promise<ClosedTab[]> {
   return new Promise((resolve) => {
     if (!isChromeAvailable || !chrome.sessions) {
       resolve([]);
       return;
     }
-    chrome.sessions.getRecentlyClosed({ maxResults: MAX_RESULTS }, (sessions) => {
+    chrome.sessions.getRecentlyClosed({ maxResults }, (sessions) => {
       if (chrome.runtime.lastError) {
         resolve([]);
         return;
@@ -56,21 +56,23 @@ function fetchClosed(): Promise<ClosedTab[]> {
           });
         }
       }
-      resolve(nodes.slice(0, MAX_RESULTS));
+      resolve(nodes.slice(0, maxResults));
     });
   });
 }
 
-export function useRecentlyClosed(): UseRecentlyClosedReturn {
+export function useRecentlyClosed(
+  limit: ExtraSectionCount = DEFAULT_SETTINGS.recentlyClosedCount
+): UseRecentlyClosedReturn {
   const [closedTabs, setClosedTabs] = useState<ClosedTab[]>([]);
   const [loading, setLoading] = useState(false);
 
   const refresh = useCallback(() => {
     setLoading(true);
-    fetchClosed()
+    fetchClosed(limit)
       .then(setClosedTabs)
       .finally(() => setLoading(false));
-  }, []);
+  }, [limit]);
 
   useEffect(() => {
     refresh();

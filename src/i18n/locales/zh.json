@@ -55,7 +55,9 @@
     "openInNewTab": "在新标签页中打开链接",
     "rememberLastFolder": "记住上次打开的文件夹",
     "showRecentlyClosed": "显示最近关闭",
+    "recentlyClosedCount": "最近关闭显示数量",
     "showMostVisited": "显示经常访问",
+    "mostVisitedCount": "经常访问显示数量",
     "language": "语言",
     "theme": "主题",
     "appearance": "外观",
@@ -124,5 +126,32 @@
     "collapseAll": "收起所有文件夹",
     "showShortcuts": "显示快捷键",
     "togglePin": "星标 / 取消星标当前文件夹"
+  },
+  "checker": {
+    "tooltip": "检测书签可访问性",
+    "title": "书签连通性检测",
+    "description": "检测当前视图中显示的 {{count}} 个书签是否可以访问。",
+    "startButton": "开始检测",
+    "progress": "已检测 {{checked}} / {{total}}",
+    "done": "检测完成",
+    "cancelled": "检测已取消",
+    "accessible": "可访问",
+    "inaccessible": "不可访问",
+    "ok": "正常",
+    "fail": "失败",
+    "cancel": "停止",
+    "recheck": "重新检测",
+    "deleteButton": "删除 {{count}} 个失败书签",
+    "deleteConfirm1": "确认？",
+    "deleteConfirm2": "最终确认 ！",
+    "deleteCancel": "取消",
+    "settings": {
+      "title": "书签检测器",
+      "concurrency": "并发请求数",
+      "concurrencyHint": "最多 8 个",
+      "timeout": "请求超时时间",
+      "timeoutUnit": "秒",
+      "timeoutHint": "每次请求的最长等待时间（1–30 秒）"
+    }
   }
 }

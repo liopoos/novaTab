@@ -13,6 +13,7 @@ import type { BookmarkTreeHandle } from "@/components/BookmarkTree";
 import { SearchBar } from "@/components/SearchBar";
 import { BreadcrumbNav } from "@/components/BreadcrumbNav";
 import { BookmarkGrid } from "@/components/BookmarkGrid";
+import { BookmarkCheckerDialog } from "@/components/BookmarkCheckerDialog";
 import { SettingsDialog } from "@/components/SettingsDialog";
 import { ShortcutsDialog } from "@/components/ShortcutsDialog";
 import type { ShortcutsDialogHandle } from "@/components/ShortcutsDialog";
@@ -26,7 +27,7 @@ import { usePinnedFolders } from "@/hooks/usePinnedFolders";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { SettingsProvider, useSettingsContext } from "@/contexts/SettingsContext";
-import type { AppSettings } from "@/types";
+import type { AppSettings, BookmarkNode } from "@/types";
 
 type ActiveView = "bookmarks" | "recentlyClosed" | "mostVisited";
 
@@ -194,7 +195,9 @@ interface SidebarContentProps {
   setActiveView: (view: ActiveView) => void;
   showRecentlyClosed: boolean;
   showMostVisited: boolean;
+  bookmarks: BookmarkNode[];
   onClose?: () => void;
+  onBookmarksReload: () => Promise<void>;
 }
 
 function SidebarContent({
@@ -213,7 +216,9 @@ function SidebarContent({
   setActiveView,
   showRecentlyClosed,
   showMostVisited,
+  bookmarks,
   onClose,
+  onBookmarksReload,
 }: SidebarContentProps) {
   const { t } = useTranslation();
   const { resolvedTheme } = useThemeContext();
@@ -243,7 +248,7 @@ function SidebarContent({
         <button
           onClick={() => handleFolderSelect(null)}
           className={cn(
-            "flex items-center gap-2 w-full px-2 py-1.5 rounded-md text-sm transition-colors",
+            "flex items-center gap-2 w-full px-2 py-1.5 rounded-md text-sm transition-colors cursor-pointer",
             activeView === "bookmarks" && selectedFolderId === null
               ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
               : "text-sidebar-foreground hover:bg-sidebar-accent/50"
@@ -256,7 +261,7 @@ function SidebarContent({
           <button
             onClick={() => handleNavSelect("recentlyClosed")}
             className={cn(
-              "flex items-center gap-2 w-full px-2 py-1.5 rounded-md text-sm transition-colors",
+              "flex items-center gap-2 w-full px-2 py-1.5 rounded-md text-sm transition-colors cursor-pointer",
               activeView === "recentlyClosed"
                 ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
                 : "text-sidebar-foreground hover:bg-sidebar-accent/50"
@@ -270,7 +275,7 @@ function SidebarContent({
           <button
             onClick={() => handleNavSelect("mostVisited")}
             className={cn(
-              "flex items-center gap-2 w-full px-2 py-1.5 rounded-md text-sm transition-colors",
+              "flex items-center gap-2 w-full px-2 py-1.5 rounded-md text-sm transition-colors cursor-pointer",
               activeView === "mostVisited"
                 ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
                 : "text-sidebar-foreground hover:bg-sidebar-accent/50"
@@ -302,6 +307,7 @@ function SidebarContent({
         <SidebarBrowserButtons />
         <Separator orientation="vertical" className="mx-1 h-5" />
         <div className="flex items-center gap-0.5 ml-auto">
+          <BookmarkCheckerDialog bookmarks={bookmarks} onDeleteDone={onBookmarksReload} />
           <ThemeToggle />
           <ShortcutsDialog ref={shortcutsRef} />
           <SettingsDialog onClearAllPins={clearAll} />
@@ -354,6 +360,7 @@ function AppContent({ isSidePanel = false }: AppContentProps) {
     loading,
     setSelectedFolder,
     setSearchQuery,
+    reloadBookmarks,
   } = useBookmarks();
 
   const { pinnedIds, pinnedFolders, pin, unpin, togglePin, reorder, clearAll } = usePinnedFolders(roots);
@@ -426,6 +433,8 @@ function AppContent({ isSidePanel = false }: AppContentProps) {
     setActiveView,
     showRecentlyClosed: settings.showRecentlyClosed,
     showMostVisited: settings.showMostVisited,
+    bookmarks,
+    onBookmarksReload: reloadBookmarks,
   };
 
   return (

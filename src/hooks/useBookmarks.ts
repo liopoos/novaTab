@@ -14,6 +14,38 @@ import { isChromeAvailable } from "@/lib/favicon";
 const LAST_FOLDER_KEY = "nova-last-folder";
 const SETTINGS_KEY = "nova-settings";
 
+function readRememberLastFolderFromCache(): boolean {
+  let raw: string | null = null;
+
+  try {
+    raw = localStorage.getItem(SETTINGS_KEY);
+  } catch {
+    return false;
+  }
+
+  if (!raw) return false;
+
+  try {
+    const settings = JSON.parse(raw) as { rememberLastFolder?: boolean };
+    return settings.rememberLastFolder === true;
+  } catch {
+    return false;
+  }
+}
+
+function readLastFolderIdFromCache(): string | null {
+  try {
+    return localStorage.getItem(LAST_FOLDER_KEY);
+  } catch {
+    return null;
+  }
+}
+
+function readLastFolderIdIfEnabledSync(): string | null {
+  if (!readRememberLastFolderFromCache()) return null;
+  return readLastFolderIdFromCache();
+}
+
 async function readLastFolderIdIfEnabled(): Promise<string | null> {
   let rememberEnabled = false;
   let lastFolderId: string | null = null;
@@ -27,38 +59,52 @@ async function readLastFolderIdIfEnabled(): Promise<string | null> {
         chrome.storage.sync.get(SETTINGS_KEY, resolve)
       ),
     ]);
-    const settings = syncResult[SETTINGS_KEY] as { rememberLastFolder?: boolean } | undefined;
-    rememberEnabled = settings?.rememberLastFolder === true;
-    lastFolderId = (localResult[LAST_FOLDER_KEY] as string | undefined) ?? null;
-  } else {
-    const raw = localStorage.getItem(SETTINGS_KEY);
-    if (raw) {
+    const settings = syncResult[SETTINGS_KEY];
+    if (settings && typeof settings === "object") {
       try {
-        const settings = JSON.parse(raw) as { rememberLastFolder?: boolean };
-        rememberEnabled = settings.rememberLastFolder === true;
+        localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
       } catch {
-        rememberEnabled = false;
+        // Ignore cache write failures.
       }
     }
-    lastFolderId = localStorage.getItem(LAST_FOLDER_KEY);
+    const typedSettings = settings as { rememberLastFolder?: boolean } | undefined;
+    rememberEnabled = typedSettings?.rememberLastFolder === true;
+    lastFolderId = (localResult[LAST_FOLDER_KEY] as string | undefined) ?? null;
+
+    try {
+      if (lastFolderId === null) {
+        localStorage.removeItem(LAST_FOLDER_KEY);
+      } else {
+        localStorage.setItem(LAST_FOLDER_KEY, lastFolderId);
+      }
+    } catch {
+      // Ignore cache write failures.
+    }
+  } else {
+    rememberEnabled = readRememberLastFolderFromCache();
+    lastFolderId = readLastFolderIdFromCache();
   }
 
   return rememberEnabled ? lastFolderId : null;
 }
 
 async function writeLastFolderId(id: string | null): Promise<void> {
+  try {
+    if (id === null) {
+      localStorage.removeItem(LAST_FOLDER_KEY);
+    } else {
+      localStorage.setItem(LAST_FOLDER_KEY, id);
+    }
+  } catch {
+    // Ignore cache write failures.
+  }
+
   if (typeof chrome !== "undefined" && chrome.storage?.local) {
     if (id === null) {
       chrome.storage.local.remove(LAST_FOLDER_KEY);
     } else {
       chrome.storage.local.set({ [LAST_FOLDER_KEY]: id });
     }
-    return;
-  }
-  if (id === null) {
-    localStorage.removeItem(LAST_FOLDER_KEY);
-  } else {
-    localStorage.setItem(LAST_FOLDER_KEY, id);
   }
 }
 
@@ -74,39 +120,40 @@ interface UseBookmarksReturn {
   error: string | null;
   setSelectedFolder: (id: string | null) => void;
   setSearchQuery: (q: string) => void;
+  reloadBookmarks: () => Promise<void>;
 }
 
 export function useBookmarks(): UseBookmarksReturn {
   const [roots, setRoots] = useState<BookmarkNode[]>([]);
-  const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
+  const [selectedFolderId, setSelectedFolderId] = useState<string | null>(() =>
+    readLastFolderIdIfEnabledSync()
+  );
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    async function load() {
-      try {
-        setLoading(true);
-        const [data, lastFolderId] = await Promise.all([
-          isChromeAvailable ? fetchBookmarks() : Promise.resolve(MOCK_BOOKMARKS),
-          readLastFolderIdIfEnabled(),
-        ]);
-        setRoots(data);
-        if (lastFolderId) {
-          const cachedFolderStillExists = findNodeById(data, lastFolderId);
-          if (cachedFolderStillExists) {
-            setSelectedFolderId(lastFolderId);
-          }
-        }
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to load bookmarks");
-        setRoots(MOCK_BOOKMARKS);
-      } finally {
-        setLoading(false);
-      }
+  const loadBookmarks = useCallback(async () => {
+    try {
+      setLoading(true);
+      const [data, lastFolderId] = await Promise.all([
+        isChromeAvailable ? fetchBookmarks() : Promise.resolve(MOCK_BOOKMARKS),
+        readLastFolderIdIfEnabled(),
+      ]);
+      setRoots(data);
+      const resolvedFolderId =
+        lastFolderId && findNodeById(data, lastFolderId) ? lastFolderId : null;
+      setSelectedFolderId(resolvedFolderId);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to load bookmarks");
+      setRoots(MOCK_BOOKMARKS);
+    } finally {
+      setLoading(false);
     }
-    load();
   }, []);
+
+  useEffect(() => {
+    void loadBookmarks();
+  }, [loadBookmarks]);
 
   const setSelectedFolder = useCallback((id: string | null) => {
     setSelectedFolderId(id);
@@ -157,5 +204,6 @@ export function useBookmarks(): UseBookmarksReturn {
     error,
     setSelectedFolder,
     setSearchQuery,
+    reloadBookmarks: loadBookmarks,
   };
 }

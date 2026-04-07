@@ -1,5 +1,5 @@
 import type { AppSettings, CustomThemeConfig, FontFamily, SidebarStyle, ThemePreset } from "@/types";
-import { DEFAULT_CUSTOM_THEME, DEFAULT_SETTINGS } from "@/types";
+import { DEFAULT_CUSTOM_THEME, DEFAULT_SETTINGS, isExtraSectionCount } from "@/types";
 
 export interface NovaSettingsExport {
   version: 1;
@@ -56,8 +56,14 @@ function mergeAppSettings(raw: unknown): AppSettings {
       typeof s.showMostVisited === "boolean"
         ? s.showMostVisited
         : DEFAULT_SETTINGS.showMostVisited,
-    language: VALID_LANGUAGES.includes(s.language as "en" | "zh")
-      ? (s.language as "en" | "zh")
+    recentlyClosedCount: isExtraSectionCount(s.recentlyClosedCount)
+      ? s.recentlyClosedCount
+      : DEFAULT_SETTINGS.recentlyClosedCount,
+    mostVisitedCount: isExtraSectionCount(s.mostVisitedCount)
+      ? s.mostVisitedCount
+      : DEFAULT_SETTINGS.mostVisitedCount,
+    language: VALID_LANGUAGES.includes(s.language as "en" | "zh" | "ja")
+      ? (s.language as "en" | "zh" | "ja")
       : DEFAULT_SETTINGS.language,
     theme: VALID_THEMES.includes(s.theme as "light" | "dark" | "system")
       ? (s.theme as "light" | "dark" | "system")
@@ -69,6 +75,14 @@ function mergeAppSettings(raw: unknown): AppSettings {
     sidebarStyle: VALID_SIDEBAR_STYLES.includes(s.sidebarStyle as SidebarStyle)
       ? (s.sidebarStyle as SidebarStyle)
       : DEFAULT_SETTINGS.sidebarStyle,
+    checkerConcurrency:
+      typeof s.checkerConcurrency === "number"
+        ? Math.min(8, Math.max(1, Math.round(s.checkerConcurrency)))
+        : DEFAULT_SETTINGS.checkerConcurrency,
+    checkerTimeoutMs:
+      typeof s.checkerTimeoutMs === "number"
+        ? Math.min(30000, Math.max(1000, Math.round(s.checkerTimeoutMs)))
+        : DEFAULT_SETTINGS.checkerTimeoutMs,
   };
 }
 
