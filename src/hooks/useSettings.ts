@@ -78,7 +78,9 @@ async function readSettings(): Promise<AppSettings> {
     return new Promise((resolve) => {
       chrome.storage.sync.get(STORAGE_KEY, (result) => {
         const stored = result[STORAGE_KEY] as Partial<AppSettings> | undefined;
-        const resolved = stored ? mergeSettings(stored) : readSettingsCache();
+        const resolved = stored
+          ? mergeSettings(stored)
+          : enforceEnvironmentSettings(DEFAULT_SETTINGS);
         writeSettingsCache(resolved);
         resolve(resolved);
       });
